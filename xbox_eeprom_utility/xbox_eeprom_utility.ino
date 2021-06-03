@@ -3,12 +3,9 @@
 #include <WiFi.h>
 #include <WiFiAP.h>
 #include <WiFiMulti.h>
-#include <WiFiUdp.h>
 #include <WiFiScan.h>
 #include <ETH.h>
-#include <WiFiClient.h>
 #include <WiFiSTA.h>
-#include <WiFiServer.h>
 #include <WiFiType.h>
 #include <WiFiGeneric.h>
 #include <WebServer.h>
@@ -22,11 +19,8 @@
 #include <WiFiClientSecure.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
-#include <WiFiUdp.h>
 #include <ESP8266WiFiType.h>
 #include <ESP8266WiFiAP.h>
-#include <WiFiClient.h>
-#include <WiFiServer.h>
 #include <ESP8266WiFiScan.h>
 #include <ESP8266WiFiGeneric.h>
 #include <ESP8266WiFiSTA.h>
@@ -40,9 +34,12 @@
 #include <flash_hal.h>
 #endif
 
+#include <WiFiClient.h>
 #include <WiFiManager.h>
-#include <Wire.h>
+#include <WiFiServer.h>
+#include <WiFiUdp.h>
 
+#include <Wire.h>
 #include <EEPROM.h>
 
 #define LittleFS_compat
