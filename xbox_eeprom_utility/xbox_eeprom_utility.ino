@@ -10,7 +10,6 @@
 #include <WiFiGeneric.h>
 #include <WebServer.h>
 #include <ESPmDNS.h>
-#include <SPIFFS.h>
 
 #else
 
@@ -44,10 +43,18 @@
 
 #define LittleFS_compat
 #ifdef LittleFS_compat
-  #define SPIFFS LittleFS
-  #include <LittleFS.h>
+#ifdef ESP32
+#include <LITTLEFS.h>
+#define SPIFFS LITTLEFS
+#else
+#include <LittleFS.h>
+#define SPIFFS LittleFS
+#endif
   static const char FS_BIN_NAME[] = "littlefs.bin";
 #else
+#ifdef ESP32
+#include <SPIFFS.h>
+#endif
   #include <FS.h>
   static const char FS_BIN_NAME[] "spiffs.bin";
 #endif
@@ -475,7 +482,7 @@ bool handleFileRead(String path) {
 #endif
     return true;
   }
-  /* This is the flashing interface when no SPIFFS is flashed. So you can flash the interface without any Serial cable */
+  /* This is the flashing interface when no SPIFFS/LittleFS is flashed. So you can flash the interface without any Serial cable */
   if (g_spiffs_not_flashed) {
     char file[sizeof(flash)];
     memcpy_P(file, flash, sizeof(flash));
@@ -555,7 +562,7 @@ void handleFileUpload() {
   }
 }
 
-/* handleUpdateUpload -- Update through uploading. Works with Firmware and SPIFFS*/
+/* handleUpdateUpload -- Update through uploading. Works with Firmware and SPIFFS or LittleFS */
 bool updateError = false;
 void handleUpdateUpload() {
   HTTPUpload &upload = server.upload();
@@ -992,7 +999,7 @@ void setup() {
 #endif
   SPIFFS.begin();
   if (!(SPIFFS.exists("/index.html"))) {
-    Serial.println("SPIFFS is not flashed. Formating it..");
+    Serial.println("FS is not flashed. Formating it..");
     SPIFFS.format();
     g_spiffs_not_flashed = 1;
     Serial.println("Done.");
@@ -1104,7 +1111,7 @@ void setup() {
 #ifndef XWIFI
   if (found_eeprom) {
 #endif
-    /* For Website from SPIFFS */
+    /* For Website from FS */
     server.onNotFound([]() {
       if (!handleFileRead(server.uri()))
         server.send(404, "text/plain", "404: Not Found");
