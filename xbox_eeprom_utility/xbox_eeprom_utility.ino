@@ -69,13 +69,13 @@ ESP8266WebServer server(80);
 #endif
 
 /* Uncomment this when using an ESP-01.  */
-//#define ESP01 1
+//#define ESP01
 /* Uncomment when you want to test it without an Xbox */
-//#define TESTMODE 1
+//#define TESTMODE
 /* Uncomment this when you power your ESP32 or ESP8266 board from your Xbox (added delay) */
-//#define POWERFROMXBOX 1
+//#define POWERFROMXBOX
 /* Uncomment this when you installed the wires for XWiFi */
-//#define XWIFI 1
+//#define XWIFI
 
 #if defined(XWIFI) && defined(ESP01)
 #error "Can't use XWiFi with a low pin count ESP device"
