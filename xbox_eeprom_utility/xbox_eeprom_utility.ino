@@ -46,10 +46,10 @@
 #ifdef LittleFS_compat
   #define SPIFFS LittleFS
   #include <LittleFS.h>
-  #define FS_BIN_NAME "littlefs.bin"
+  static const char FS_BIN_NAME[] = "littlefs.bin";
 #else
   #include <FS.h>
-  #define FS_BIN_NAME "spiffs.bin"
+  static const char FS_BIN_NAME[] "spiffs.bin";
 #endif
 
 #include <ArduinoOTA.h>
