@@ -1139,7 +1139,7 @@ void setup() {
   }
   else {
     server.onNotFound([]() {
-      server.send(404, "text/plain", "404: No EEPROM Found");
+      server.send(523, "text/plain", "523: EEPROM Is Unreachable");
     });
   }
 #endif
