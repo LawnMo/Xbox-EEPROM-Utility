@@ -70,16 +70,12 @@ ESP8266WebServer server(80);
 /* Uncomment this when you installed the wires for XWiFi */
 #define XWIFI 1
 
-#ifdef XWIFI
-#ifdef ESP01
-#error Can't use XWiFi with a low pin count ESP device
-#endif
-#ifdef ESP32
-#error XWiFi isn't tested on the ESP32
-#endif
-#ifdef TESTMODE
-#error Can't test XEU with XWiFi in Testmode
-#endif
+#if defined(XWIFI) && defined(ESP01)
+#error "Can't use XWiFi with a low pin count ESP device"
+#elif defined(XWIFI) && defined(ESP32)
+#error "XWiFi isn't tested on the ESP32"
+#elif defined(XWIFI) && defined(TESTMODE)
+#error "Can't test XEU with XWiFi in Testmode"
 #endif
 
 /* i2c pins depending on your ESP32 or ESP8266 */
