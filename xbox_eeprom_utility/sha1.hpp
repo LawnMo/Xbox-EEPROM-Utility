@@ -27,7 +27,7 @@ public:
     static void Init(SHA1_CTX * context);
     static void Update(SHA1_CTX * context, const unsigned char *data, uint32_t len);
     static void Final(unsigned char digest[20], SHA1_CTX * context);
-    static void Hash(char *hash_out, const char *str, int len);
+    static void Hash(char *hash_out, const char *str, unsigned int len);
 };
 
 #endif /* SHA1_HPP */
