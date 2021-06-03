@@ -49,8 +49,10 @@
 #ifdef LittleFS_compat
   #define SPIFFS LittleFS
   #include <LittleFS.h>
+  #define FS_BIN_NAME "littlefs.bin"
 #else
-#include <FS.h>
+  #include <FS.h>
+  #define FS_BIN_NAME "spiffs.bin"
 #endif
 
 #include <ArduinoOTA.h>
@@ -563,7 +565,7 @@ void handleUpdateUpload() {
   if (upload.status == UPLOAD_FILE_START) {
     String updatefile = upload.filename;
     Serial.println("Update started:");
-    if (updatefile.endsWith("spiffs.bin")) {
+    if (updatefile.endsWith(FS_BIN_NAME)) {
 #ifdef ESP32
       if (!Update.begin(UPDATE_SIZE_UNKNOWN, U_SPIFFS)) {
         Serial.println("error");
@@ -572,7 +574,7 @@ void handleUpdateUpload() {
 #else
       String fsBlockSizeStr = String((int)&_FS_block);
       if(updatefile.indexOf(fsBlockSizeStr) < 0){
-        Serial.printf("Update Error! Please download and install xeu.%s.spiffs.bin\n", fsBlockSizeStr.c_str());
+        Serial.printf("Update Error! Please download and install xeu.%s.%s\n", fsBlockSizeStr.c_str(), FS_BIN_NAME);
         updateError = true;
         return;
       }
