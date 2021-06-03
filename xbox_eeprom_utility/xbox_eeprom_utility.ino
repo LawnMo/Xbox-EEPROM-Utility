@@ -44,7 +44,14 @@
 #include <Wire.h>
 
 #include <EEPROM.h>
+
+#define LittleFS_compat
+#ifdef LittleFS_compat
+  #define SPIFFS LittleFS
+  #include <LittleFS.h>
+#else
 #include <FS.h>
+#endif
 
 #include <ArduinoOTA.h>
 #include <ArduinoJson.h>
