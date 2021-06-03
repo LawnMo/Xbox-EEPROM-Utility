@@ -494,8 +494,7 @@ bool handleFileRead(String path) {
     if (path.endsWith("index.html")) {
       path = "/index2.html";
     }
-#endif
-#ifndef XWIFI
+#else
     if (path.endsWith("index2.html")) return false;  /* hide XWiFi compatible interface from the normal XEU */
 #endif
     File file = SPIFFS.open(path, "r");
