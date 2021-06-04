@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-#ifdef ESP32
-
+// esp32 includes
+#ifdef ARDUINO_ARCH_ESP32
 #include <WiFi.h>
 #include <WiFiAP.h>
 #include <WiFiMulti.h>
@@ -12,9 +12,10 @@
 #include <WiFiGeneric.h>
 #include <WebServer.h>
 #include <ESPmDNS.h>
+#endif
 
-#else
-
+// esp8266 includes
+#ifdef ARDUINO_ARCH_ESP8266
 #include <ESP8266mDNS.h>
 #include <WiFiServerSecure.h>
 #include <WiFiClientSecure.h>
@@ -30,9 +31,9 @@
 #include <ESP8266NetBIOS.h>
 
 #include <flash_hal.h>
-
 #endif
 
+// common
 #include <WiFiClient.h>
 #include <WiFiManager.h>
 #include <WiFiServer.h>
@@ -43,16 +44,16 @@
 
 #define LittleFS_compat
 #ifdef LittleFS_compat
-#ifdef ESP32
+#if defined(ARDUINO_ARCH_ESP32)
   #include <LITTLEFS.h>
   #define SPIFFS LITTLEFS
-#else
+#elif defined(ARDUINO_ARCH_ESP8266) 
   #include <LittleFS.h>
 #define SPIFFS LittleFS
 #endif
-  static const char FS_BIN_NAME[] = "littlefs.bin";
+static const char FS_BIN_NAME[] = "littlefs.bin";
 #else
-#ifdef ESP32
+#ifdef ARDUINO_ARCH_ESP32
   #include <SPIFFS.h>
 #endif
   #include <FS.h>
@@ -68,7 +69,7 @@
 
 static const char PAYLOAD_VERSION[] = "V0.7.2";
 
-#ifdef ESP32
+#ifdef ARDUINO_ARCH_ESP32
 WebServer server(80);
 #else
 ESP8266WebServer server(80);
@@ -95,7 +96,7 @@ ESP8266WebServer server(80);
 #ifdef ESP01
 #define sda 2
 #define scl 0
-#elif ESP32
+#elif ARDUINO_ARCH_ESP32
 #define sda 21
 #define scl 22
 #else
@@ -515,7 +516,7 @@ bool handleFileRead(String path) {
   if (g_spiffs_not_flashed) {
     char file[sizeof(flash)];
     memcpy_P(file, flash, sizeof(flash));
-#ifdef ESP32
+#ifdef ARDUINO_ARCH_ESP32
     server.send(200, "text/html", file);
 #else
     server.send(200, "text/html", file, sizeof(flash));
@@ -599,7 +600,7 @@ void handleUpdateUpload() {
     String updatefile = upload.filename;
     Serial.println("Update started:");
     if (updatefile.endsWith(FS_BIN_NAME)) {
-#ifdef ESP32
+#ifdef ARDUINO_ARCH_ESP32
       if (!Update.begin(UPDATE_SIZE_UNKNOWN, U_SPIFFS)) {
         Serial.println("error");
         updateError = true;
@@ -620,7 +621,7 @@ void handleUpdateUpload() {
 #endif
     }
     else {
-#ifdef ESP32
+#ifdef ARDUINO_ARCH_ESP32
       if(updatefile.endsWith("esp32.bin")){
         Serial.printf("Trying to flash %s\n", updatefile.c_str());
       }
@@ -661,7 +662,7 @@ void handleUpdateUpload() {
       Serial.println(" Flashing successfully");
       Serial.println("Rebooting now");
       delay(500);
-#ifdef ESP32
+#ifdef ARDUINO_ARCH_ESP32
       ESP.restart();
 #else
       ESP.reset();
@@ -882,7 +883,7 @@ void handleConfig() {
 void handlePROGMEMUpdate() {
   char file[sizeof(flash)];
   memcpy_P(file, flash, sizeof(flash));
-#ifdef ESP32
+#ifdef ARDUINO_ARCH_ESP32
   server.send(200, "text/html", file);
 #else
   server.send(200, "text/html", file, sizeof(flash));
@@ -1089,7 +1090,7 @@ void setup() {
      Else it connects to the Access Point you provided.
   */
   WiFiManager wifiManager;
-#ifdef ESP32
+#ifdef ARDUINO_ARCH_ESP32
   wifiManager.setHostname("XEU-ESP32");
 #else
   wifiManager.setHostname("XEU-ESP8266");
@@ -1161,7 +1162,7 @@ void loop() {
   ArduinoOTA.handle();
 #ifdef XWIFI
   if (resetFlag) {
-#ifdef ESP32
+#ifdef ARDUINO_ARCH_ESP32
     ESP.restart();
 #else
     ESP.reset();
