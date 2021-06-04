@@ -544,7 +544,9 @@ bool handleFileRead(String path) {
 bool IsUploadSuccess = false;
 void handleFileUpload() {
   HTTPUpload &upload = server.upload();
+#ifdef XWIFI
   int wasOff = 0;
+#endif
   if (upload.status == UPLOAD_FILE_START) {
     //Do nothing
 
