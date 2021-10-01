@@ -78,7 +78,7 @@ ESP8266WebServer server(80);
 /* Uncomment this when using an ESP-01.  */
 //#define ESP01
 /* Uncomment when you want to test it without an Xbox */
-//#define TESTMODE
+#define TESTMODE
 /* Uncomment this when you power your ESP32 or ESP8266 board from your Xbox (added delay) */
 //#define POWERFROMXBOX
 /* Uncomment this when you installed the wires for XWiFi */
@@ -199,7 +199,9 @@ class XboxEeprom: public Stream
         buffer[u] = xReadEEPROM(eep_addr, i - 1);
 #endif
       }
+    return 0;
     }
+
     virtual int peek() {
 #ifdef TESTMODE
       return EEPROM.read(i - 1);
@@ -207,14 +209,15 @@ class XboxEeprom: public Stream
       return xReadEEPROM(eep_addr, i - 1);
 #endif
     }
+
     virtual void flush() {
       eepromsize = 0;
     }
+
     virtual size_t write (uint8_t *buffer, size_t size) {
       if (size > 0x100) {
         return 0;
       }
-
       for (int i = 0; i < 0x100; i++) {
 #ifdef TESTMODE
         EEPROM.write(i, buffer[i]);
@@ -227,15 +230,19 @@ class XboxEeprom: public Stream
 #endif
       return size;
     }
+
     virtual size_t write (uint8_t data) {
       return 0;
     }
+
     size_t size() {
       return eepromsize;
     }
+
     const char *name() {
       return "eeprom.bin";
     }
+
     virtual void close() {
       i = 0;
 #ifdef TESTMODE
@@ -351,6 +358,7 @@ class DecrEeprom : public Stream
     virtual size_t write(uint8_t *buffer, size_t size) {
       hasWritten = true;
       memcpy(dram, buffer, size);
+      return 0;
     }
 
     virtual size_t write(uint8_t data) {
